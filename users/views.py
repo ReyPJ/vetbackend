@@ -1,8 +1,8 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ChangePasswordSerializer, UsernameSerializer
 from .permissions import IsAdmin
 
 
@@ -16,16 +16,20 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
 
+class UsernamesListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UsernameSerializer
+    queryset = CustomUser.objects.all()
+
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
+    serializer_class = ChangePasswordSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
-        new_password = request.data.get('password')
-        if new_password:
-            user.set_password(new_password)
-            user.save()
-            return Response({'status': 'Password set'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'status': 'No password provided'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()  # Esto actualizará la contraseña
+
+        return Response({'status': 'Password set'}, status=status.HTTP_200_OK)
