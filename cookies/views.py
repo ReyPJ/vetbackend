@@ -6,5 +6,5 @@ def set_admin_cookie(request):
     response = HttpResponse("Cookie de admin set")
     utc_now = datetime.now(ZoneInfo("UTC"))
     expires = utc_now + timedelta(days=1)
-    response.set_cookie('isAdmin', 'true', expires=expires, httponly=True, secure=True, samesite='None')
+    response.set_cookie('isAdmin', 'true', expires=expires, httponly=True, secure=True, samesite='None', path='/')
     return response
