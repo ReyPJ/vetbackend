@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import dj_database_url
+from django.contrib import staticfiles
 from dotenv import load_dotenv
 import os
 
@@ -34,6 +35,7 @@ if SECRET_KEY == 'None':
         'No se ha encontrado la variable de entorno DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#Pruduction
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -44,6 +46,18 @@ SECURE_HSTS_SECONDS = 3600
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_BROWSER_XSS_FILTER = True
+
+# Development
+# DEBUG = True
+#
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# SECURE_HSTS_SECONDS = 0
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+# SECURE_HSTS_PRELOAD = False
+# SECURE_BROWSER_XSS_FILTER = False
 
 
 # Application definition
@@ -59,7 +73,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     "users",
-    'drf_yasg'
+    'tasks',
+    'drf_yasg',
+    "cookies",
 ]
 
 MIDDLEWARE = [
@@ -101,16 +117,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
-}
-
-if os.getenv('DATABASE_URL') is None:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL')
+        )
     }
 
 

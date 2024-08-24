@@ -5,7 +5,6 @@ from .models import CustomUser
 from .serializers import UserSerializer, ChangePasswordSerializer, UsernameSerializer
 from .permissions import IsAdmin
 
-
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
