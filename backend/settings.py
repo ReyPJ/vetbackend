@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     "users",
     'tasks',
     'drf_yasg',
-    "cookies",
 ]
 
 MIDDLEWARE = [
@@ -91,7 +90,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://v-b-zeta.vercel.app",
-    "htpps://v-b-reypjs-projects.vercel.app"
+    "htpps://v-b-reypjs-projects.vercel.app",
+    'http://localhost:3000',
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
