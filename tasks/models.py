@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import CustomUser
+from datetime import timedelta
 
 class Task(models.Model):
     VERY_IMPORTANT = 2
@@ -21,6 +22,7 @@ class Task(models.Model):
     help_image = models.ImageField(upload_to='static/tasks/', blank=True, null=True)
     is_recurrent = models.BooleanField(default=False)
     recurrent_period = models.DurationField(blank=True, null=True, default=None)
+    recurrent_days = models.IntegerField(default=1)
     proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
 
     def mark_as_completed(self):
@@ -29,4 +31,24 @@ class Task(models.Model):
 
     def mark_as_uncompleted(self):
         self.is_completed = False
+        self.save()
+
+    def create_instance(self):
+        if self.is_recurrent and self.recurrent_period:
+            recurrence_hours = self.recurrent_period.total_seconds() / 3600.0
+            total_instances = int((self.recurrent_days * 24) / recurrence_hours)
+
+            for i in range(total_instances):
+                scheduled_time = self.created_date + timedelta(hours=recurrence_hours * i)
+                TaskInstance.objects.create(task=self, instance_number=i + 1, scheduled_time=scheduled_time)
+
+
+class TaskInstance(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    instance_number = models.IntegerField()
+    scheduled_time = models.DateTimeField()
+    is_completed = models.BooleanField(default=False)
+
+    def mark_as_completed(self):
+        self.is_completed = True
         self.save()
