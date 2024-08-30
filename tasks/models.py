@@ -21,6 +21,7 @@ class Task(models.Model):
     help_image = models.ImageField(upload_to='static/tasks/', blank=True, null=True)
     is_recurrent = models.BooleanField(default=False)
     recurrent_period = models.DurationField(blank=True, null=True, default=None)
+    proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
 
     def mark_as_completed(self):
         self.is_completed = True

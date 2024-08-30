@@ -1,10 +1,14 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser
-from .serializers import UserSerializer, ChangePasswordSerializer, UsernameSerializer
+from .serializers import UserSerializer, ChangePasswordSerializer, UsernameSerializer, CustomTokenObtainPairSerializer
 from .permissions import IsAdmin
 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -29,6 +33,6 @@ class ChangePasswordView(generics.UpdateAPIView):
         user = self.get_object()
         serializer = self.get_serializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()  # Esto actualizará la contraseña
+        serializer.save()
 
         return Response({'status': 'Password set'}, status=status.HTTP_200_OK)
