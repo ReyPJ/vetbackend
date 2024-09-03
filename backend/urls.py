@@ -10,9 +10,9 @@ from django.conf.urls.static import static
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API Usuarios",
+        title="API Vet System",
         default_version='v1',
-        description="API for users",
+        description="API for Vet System",
     ),
     public=True,
     permission_classes=[permissions.AllowAny,],

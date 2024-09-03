@@ -24,6 +24,7 @@ class Task(models.Model):
     recurrent_period = models.DurationField(blank=True, null=True, default=None)
     recurrent_days = models.IntegerField(default=1)
     proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
+    is_archived = models.BooleanField(default=False)
 
     def mark_as_completed(self):
         self.is_completed = True
@@ -52,3 +53,13 @@ class TaskInstance(models.Model):
     def mark_as_completed(self):
         self.is_completed = True
         self.save()
+
+class TaskCompletedProof(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
+    completed_date = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(max_length=800, blank=True, null=True, default=None)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.task}'

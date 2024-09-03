@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task, TaskInstance
+from .models import Task, TaskInstance, TaskCompletedProof
 
 class TaskInstanceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,10 @@ class TaskSerializer(serializers.ModelSerializer):
          instance.priority = validated_data.get('priority', instance.priority)
          instance.save()
          return instance
+
+class TaskCompletedProofSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = TaskCompletedProof
+        fields = "__all__"
