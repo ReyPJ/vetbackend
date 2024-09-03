@@ -81,15 +81,13 @@ INSTALLED_APPS = [
 # Configuración de AWS S3
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+AWS_STORAGE_BUCKET_NAME = "vb-bucket-cr"
 AWS_S3_REGION_NAME = os.getenv('AWS_REGION')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
+AWS_LOCATION = 'static'
 
 
 MIDDLEWARE = [
@@ -107,6 +105,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://v-b-zeta.vercel.app",
     "htpps://v-b-reypjs-projects.vercel.app",
     'http://localhost:3000',
+    f"https://{AWS_S3_CUSTOM_DOMAIN}"
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
@@ -185,10 +184,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 
 
