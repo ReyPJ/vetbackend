@@ -78,16 +78,16 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-# Configuración de AWS S3
+# Digital Ocean Spaces
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET')
-AWS_STORAGE_BUCKET_NAME = "vb-bucket-cr"
-AWS_S3_REGION_NAME = os.getenv('AWS_REGION')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_ACCESS_SECRET_KEY = os.getenv('AWS_SECRET')
+AWS_STORAGE_BUCKET_NAME = 'django-assets'
+AWS_S3_ENDPOINT_URL = 'https://django-assets.nyc3.digitaloceanspaces.com'
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-AWS_LOCATION = 'static'
+AWS_LOCATION = AWS_STORAGE_BUCKET_NAME
 
 
 MIDDLEWARE = [
@@ -105,7 +105,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://v-b-zeta.vercel.app",
     "htpps://v-b-reypjs-projects.vercel.app",
     'http://localhost:3000',
-    f"https://{AWS_S3_CUSTOM_DOMAIN}"
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
@@ -184,11 +183,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/media/"
 
 
 # Default primary key field type
