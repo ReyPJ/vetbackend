@@ -78,20 +78,6 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-# Digital Ocean Spaces
-
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS')
-AWS_ACCESS_SECRET_KEY = os.getenv('AWS_SECRET')
-AWS_STORAGE_BUCKET_NAME = 'django-assets'
-AWS_S3_ENDPOINT_URL = 'https://django-assets.nyc3.digitaloceanspaces.com'
-AWS_S3_REGION_NAME = 'nyc3'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = AWS_STORAGE_BUCKET_NAME
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -184,13 +170,28 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+AWS_DEFAULT_ACL = 'public-read'
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
+
+AWS_QUERYSTRING_AUTH = False
+AWS_HEADERS = {
+    'Access-Control-Allow-Origin': '*'
+}
+
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
-
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
