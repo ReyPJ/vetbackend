@@ -19,11 +19,11 @@ class Task(models.Model):
     is_completed= models.BooleanField(default=False)
     created_date= models.DateTimeField(auto_now_add=True)
     modified_date= models.DateTimeField(auto_now=True)
-    help_image = models.ImageField(upload_to='static/tasks/', blank=True, null=True)
+    help_image = models.ImageField(upload_to='tasks/', blank=True, null=True)
     is_recurrent = models.BooleanField(default=False)
     recurrent_period = models.DurationField(blank=True, null=True, default=None)
     recurrent_days = models.IntegerField(default=1)
-    proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
+    proof_image = models.ImageField(upload_to='tasks/proofs/', blank=True, null=True)
     is_archived = models.BooleanField(default=False)
 
     def mark_as_completed(self):
@@ -56,7 +56,7 @@ class TaskInstance(models.Model):
 
 class TaskCompletedProof(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    proof_image = models.ImageField(upload_to='static/tasks/proofs/', blank=True, null=True)
+    proof_image = models.ImageField(upload_to='tasks/proofs/', blank=True, null=True)
     completed_date = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(max_length=800, blank=True, null=True, default=None)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
