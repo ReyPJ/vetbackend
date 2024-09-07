@@ -2,10 +2,11 @@ from rest_framework import serializers
 from .models import CustomUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'role']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'role', 'phone']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -41,6 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError({"error": str(e)})
 
+
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True, required=True, min_length=8)
 
@@ -49,6 +51,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         instance.set_password(new_password)
         instance.save()
         return instance
+
 
 class UsernameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,4 +65,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['role'] = user.role
         return token
-

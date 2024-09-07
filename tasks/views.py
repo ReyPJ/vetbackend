@@ -9,6 +9,7 @@ from users.permissions import IsStaffOrAdmin
 from .models import Task, TaskInstance, TaskCompletedProof
 from .serializers import TaskSerializer, TaskCompletedProofSerializer
 
+
 class TaskListCreateView(generics.ListCreateAPIView):
     """
     To filter the tasks list by archived status you need to pass the is_archived query parameter<br>
@@ -30,6 +31,7 @@ class TaskListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         task = serializer.save()
         task.create_instance()
+
 
 class TaskUpdateView(generics.UpdateAPIView):
     queryset = Task.objects.all()

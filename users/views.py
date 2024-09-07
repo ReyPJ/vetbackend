@@ -9,20 +9,25 @@ from .permissions import IsAdmin
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
+
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
 
+
 class UsernamesListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = UsernameSerializer
     queryset = CustomUser.objects.all()
+
 
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()

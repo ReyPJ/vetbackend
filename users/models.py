@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
+
 class CustomUser(AbstractUser):
     ADMIN = 'admin'
     STAFF = 'staff'
@@ -13,6 +14,7 @@ class CustomUser(AbstractUser):
     ]
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=MEMBER)
+    phone = models.CharField(max_length=15, blank=True, null=True)
 
     groups = models.ManyToManyField(
         Group,
@@ -31,3 +33,4 @@ class CustomUser(AbstractUser):
         verbose_name='user permissions',
         related_query_name='customuser',
     )
+

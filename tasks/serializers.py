@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Task, TaskInstance, TaskCompletedProof
 
+
 class TaskInstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskInstance
         fields = "__all__"
+
 
 class TaskSerializer(serializers.ModelSerializer):
     instances = TaskInstanceSerializer(many=True, read_only=True, source='taskinstance_set')
@@ -17,7 +19,7 @@ class TaskSerializer(serializers.ModelSerializer):
             'modified_date': {'read_only': True},
         }
 
-    def update (self, instance, validated_data):
+    def update(self, instance, validated_data):
          instance.title = validated_data.get('title', instance.title)
          instance.description = validated_data.get('description', instance.description)
          instance.priority = validated_data.get('priority', instance.priority)
