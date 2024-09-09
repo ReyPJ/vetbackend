@@ -19,6 +19,7 @@ class Task(models.Model):
     priority = models.IntegerField(choices=PRIO_CHOICES, default=NOT_IMPORTANT)
     is_completed = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
+    scheduled_start_date = models.DateTimeField(blank=True, null=True, default=None)
     modified_date = models.DateTimeField(auto_now=True)
     help_image = models.ImageField(upload_to='tasks/', blank=True, null=True)
     is_recurrent = models.BooleanField(default=False)
