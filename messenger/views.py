@@ -4,6 +4,7 @@ from rest_framework import status
 from twilio.rest import Client
 from django.conf import settings
 from .serializers import WhatsAppMessageSerializer
+import json
 
 
 class SendWhatsAppMessageAPIView(APIView):
@@ -18,7 +19,14 @@ class SendWhatsAppMessageAPIView(APIView):
                 message = client.messages.create(
                     from_=settings.TWILIO_WHATSAPP_NUMBER,
                     to=f"whatsapp:{to}",
-                    content_sid="HXfd8e47a6b149ce72e11cfd5ecfe2b1bc"
+                    content_sid=settings.TWILIO_TEMPLATE_ID_1,
+                    content_variables=json.dumps(
+                        {
+                            "1": "Reyner",
+                            "2": "Limpiar internados",
+                            "3": "20 minutos",
+                        }
+                    )
                 )
                 return Response({f"Mensaje enviado, message_sid: {message.sid}"}, status=status.HTTP_200_OK)
 
