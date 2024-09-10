@@ -24,6 +24,7 @@ class Task(models.Model):
     is_recurrent = models.BooleanField(default=False)
     recurrent_period = models.DurationField(blank=True, null=True, default=None)
     recurrent_days = models.IntegerField(default=1)
+    scheduled_time = models.DateTimeField(blank=True, null=True, default=None)
     proof_image = models.ImageField(upload_to='tasks/proofs/', blank=True, null=True)
     is_archived = models.BooleanField(default=False)
     assigned_to = models.ForeignKey(
