@@ -8,6 +8,20 @@ import json
 
 
 class SendWhatsAppMessageAPIView(APIView):
+    """
+    Parameters:
+    - to: str(whatsapp number)
+    - param1: str(optional)
+    - param2: str(optional)
+    Example:
+    {
+        "to": "whatsapp:+573002222222",
+        "1": "Hello",
+        "2": "World"
+    }
+    """
+
+    @staticmethod
     def post(self, request):
         serializer = WhatsAppMessageSerializer(data=request.data)
 
