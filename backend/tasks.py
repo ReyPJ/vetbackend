@@ -2,6 +2,7 @@ from celery import shared_task
 from django.urls import reverse
 import requests
 
+
 @shared_task
 def send_whatsapp_notification(task_id):
     url = "http://localhost:8000/api" + reverse("send-whatsapp", args=[task_id])

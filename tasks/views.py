@@ -33,8 +33,8 @@ class TaskListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         task = serializer.save()
         task.create_instance()
-
         task.scheduled_notification()
+
 
 
 class TaskUpdateView(generics.UpdateAPIView):

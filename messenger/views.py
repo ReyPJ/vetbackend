@@ -10,7 +10,7 @@ import json
 
 class SendWhatsAppMessageAPIView(APIView):
     @staticmethod
-    def post(self, request, task_id):
+    def post(request, task_id):
         try:
             task = Task.objects.get(id=task_id)
 
@@ -25,20 +25,20 @@ class SendWhatsAppMessageAPIView(APIView):
             variables = {
                 "1": username,
                 "2": task_name,
-                "3": "10 minutos"
+                "3": "10"
             }
 
             client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
             message = client.messages.create(
-                from_=f"whatsapp:{settings.TWILIO_WHATSAPP_NUMBER}",
+                from_={settings.TWILIO_WHATSAPP_NUMBER},
                 to=f"whatsapp:{task.assigned_to.phone}",
-                content_sid=settings.TWILIO_WHATSAPP_TEMPLATE_SID,
+                content_sid=settings.TWILIO_TEMPLATE_ID_1,
                 content_variables=json.dumps(variables)
             )
 
             return Response(
-                {"message": "Mensaje enviado"},
+                {"message": f"Mensaje enviado, message sid: {message.sid}"},
                 status=status.HTTP_200_OK
             )
 
