@@ -5,6 +5,8 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from urllib3 import request
+
 from users.permissions import IsStaffOrAdmin
 from .models import Task, TaskInstance, TaskCompletedProof
 from .serializers import TaskSerializer, TaskCompletedProofSerializer
@@ -31,6 +33,8 @@ class TaskListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         task = serializer.save()
         task.create_instance()
+
+        task.scheduled_notification()
 
 
 class TaskUpdateView(generics.UpdateAPIView):

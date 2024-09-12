@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import CustomUser
 from datetime import timedelta
+from django.conf import settings
+from backend.tasks import send_whatsapp_notification
 
 
 class Task(models.Model):
@@ -35,6 +37,22 @@ class Task(models.Model):
         null=True
     )
 
+    def scheduled_notification(self):
+        if not self.scheduled_time_start:
+            return
+
+        send_whatsapp_notification.apply_async(
+            (self.id,),
+            eta=self.scheduled_time_start - timedelta(minutes=10)
+        )
+
+        task_duration = timedelta(minutes=10)
+        send_whatsapp_notification.apply_async(
+            (self.id,),
+            eta=self.scheduled_time_start + task_duration
+        )
+
+
     def mark_as_completed(self):
         self.is_completed = True
         self.save()
@@ -49,7 +67,7 @@ class Task(models.Model):
             total_instances = int((self.recurrent_days * 24) / recurrence_hours)
 
             for i in range(total_instances):
-                scheduled_time = self.created_date + timedelta(hours=recurrence_hours * i)
+                scheduled_time = self.scheduled_time_start + timedelta(hours=recurrence_hours * i)
                 TaskInstance.objects.create(task=self, instance_number=i + 1, scheduled_time=scheduled_time)
 
 

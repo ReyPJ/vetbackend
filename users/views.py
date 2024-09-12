@@ -22,7 +22,6 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
 
-
 class UsernamesListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = UsernameSerializer

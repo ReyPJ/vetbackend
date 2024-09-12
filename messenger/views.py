@@ -1,50 +1,54 @@
+from pyexpat.errors import messages
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from twilio.rest import Client
 from django.conf import settings
-from .serializers import WhatsAppMessageSerializer
+from tasks.models import Task
 import json
 
 
 class SendWhatsAppMessageAPIView(APIView):
-    """
-    Parameters:
-    - to: str(whatsapp number)
-    - param1: str(optional)
-    - param2: str(optional)
-    Example:
-    {
-        "to": "whatsapp:+573002222222",
-        "1": "Hello",
-        "2": "World"
-    }
-    """
-
     @staticmethod
-    def post(self, request):
-        serializer = WhatsAppMessageSerializer(data=request.data)
+    def post(self, request, task_id):
+        try:
+            task = Task.objects.get(id=task_id)
 
-        if serializer.is_valid():
-            to = serializer.validated_data.get("to")
+            if not task.assigned_to or not task.assigned_to.phone:
+                return Response(
+                    {"error": "No hay usuario asignado o no tiene un numero de telefono"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            username = task.assigned_to.username
+            task_name = task.title
+            variables = {
+                "1": username,
+                "2": task_name,
+                "3": "10 minutos"
+            }
 
             client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-            try:
-                message = client.messages.create(
-                    from_=settings.TWILIO_WHATSAPP_NUMBER,
-                    to=f"whatsapp:{to}",
-                    content_sid=settings.TWILIO_TEMPLATE_ID_1,
-                    content_variables=json.dumps(
-                        {
-                            "1": "Reyner",
-                            "2": "Limpiar internados",
-                            "3": "20 minutos",
-                        }
-                    )
-                )
-                return Response({f"Mensaje enviado, message_sid: {message.sid}"}, status=status.HTTP_200_OK)
 
-            except Exception as e:
-                return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            message = client.messages.create(
+                from_=f"whatsapp:{settings.TWILIO_WHATSAPP_NUMBER}",
+                to=f"whatsapp:{task.assigned_to.phone}",
+                content_sid=settings.TWILIO_WHATSAPP_TEMPLATE_SID,
+                content_variables=json.dumps(variables)
+            )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Mensaje enviado"},
+                status=status.HTTP_200_OK
+            )
+
+        except Task.DoesNotExist:
+            return Response(
+                {"error": "La tarea no existe"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
