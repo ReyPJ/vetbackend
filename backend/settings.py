@@ -103,8 +103,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -252,6 +251,6 @@ TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER")
 TWILIO_TEMPLATE_ID_1 = os.getenv("TWILIO_TEMPLATE_CODE_MESSAGE_1")
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://localhost:6379/'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
