@@ -20,3 +20,4 @@ urlpatterns = [
     path('tasks/<int:pk>/update/', TaskUpdateView.as_view(), name='task-update'),
     path('tasks/archive/', TaskArchiveView.as_view(), name='task-archive'),
 ]
+

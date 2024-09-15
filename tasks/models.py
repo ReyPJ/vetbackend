@@ -52,7 +52,6 @@ class Task(models.Model):
             eta=self.scheduled_time_start + task_duration
         )
 
-
     def mark_as_completed(self):
         self.is_completed = True
         self.save()

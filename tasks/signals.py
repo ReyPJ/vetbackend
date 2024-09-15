@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.core.files.storage import default_storage
 from .models import Task, TaskCompletedProof
 
+
 @receiver(post_delete, sender=Task)
 def delete_file(sender, instance, **kwargs):
     if instance.help_image:
@@ -15,3 +16,4 @@ def delete_proof_file(sender, instance, **kwargs):
     if instance.proof_image:
         if default_storage.exists(instance.proof_image.name):
             instance.proof_image.delete(save=False)
+

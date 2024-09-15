@@ -36,7 +36,6 @@ class TaskListCreateView(generics.ListCreateAPIView):
         task.scheduled_notification()
 
 
-
 class TaskUpdateView(generics.UpdateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -45,6 +44,7 @@ class TaskUpdateView(generics.UpdateAPIView):
     # Habilitando Patch
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
 
 class TaskArchiveView(APIView):
     permission_classes = [IsAuthenticated]

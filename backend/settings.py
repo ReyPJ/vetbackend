@@ -94,6 +94,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://v-b-zeta.vercel.app",
     "htpps://v-b-reypjs-projects.vercel.app",
     'http://localhost:3000',
+    "https://web.postman.co",
+
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
