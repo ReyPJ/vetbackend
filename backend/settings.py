@@ -262,3 +262,27 @@ else:
     CELERY_BROKER_URL = os.getenv('REDIS_URL')
     CELERY_TLS_URL = os.getenv('REDIS_TLS_URL')
     CELERY_TEMPORARY_URL = os.getenv('REDIS_TEMPORARY_URL')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/django_errors.log',  # Heroku permite escribir en /tmp
+        },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
