@@ -33,4 +33,3 @@ class CustomUser(AbstractUser):
         verbose_name='user permissions',
         related_query_name='customuser',
     )
-
